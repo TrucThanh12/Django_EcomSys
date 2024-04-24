@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-m3_vu#ua)7vnvjanj#m1_!lyl*e*_85s47z_m5g!z!paby+)rh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+PORT = 4004
 
 
 # Application definition
@@ -37,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'cart'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +79,12 @@ WSGI_APPLICATION = 'cart_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_carts',
+        'USER': 'root',
+        'PASSWORD': 'trucdien1812',
+        'HOST': 'localhost',
+        'PORT': 3306
     }
 }
 
@@ -119,5 +127,9 @@ STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOW_CREDENTIALS = True #cho phép trình duyệt web yêu cầu tài nguyên từ 1 domain khác vơ ngồn mà trang web đang chay
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
