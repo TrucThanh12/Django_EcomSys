@@ -6,7 +6,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ['user_id','quantity','type','product_id']
 
     def destroy(self,instance):
-        instance.is_active = False,
+        instance.is_active = False
         instance.save()
         return instance
 
