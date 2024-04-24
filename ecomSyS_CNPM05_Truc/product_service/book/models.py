@@ -33,16 +33,20 @@ class Publisher(models.Model):
 class Book(models.Model):
     book_id = models.CharField(max_length=7,primary_key=True)
     title = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='images/books')
+    image = models.ImageField(upload_to='images/books',null=True)
     price = models.FloatField()
     sale = models.FloatField()
     quantity = models.IntegerField()
     is_active = models.BooleanField(default=True)
     des = models.TextField(null=True)
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,default=None)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE,default=None)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE,default=None)
+
+    # category_id = models.ManyToManyField(Category)
+    # author_id = models.ManyToManyField(Author)
+    # publisher_id = models.ManyToManyField(Publisher)
 
 
     def __str__(self):

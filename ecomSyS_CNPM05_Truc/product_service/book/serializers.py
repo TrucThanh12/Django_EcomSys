@@ -38,40 +38,41 @@ class PublisherSerializer(serializers.ModelSerializer):
 
 # lưu, xóa book
 class BookSerializer(serializers.ModelSerializer):
+    category_id = serializers.CharField(write_only=True)
+    author_id = serializers.CharField(write_only=True)
+    publisher_id = serializers.CharField(write_only=True)
     class Meta:
         model = Book
-        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category', 'authors', 'publisher']
+        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category_id', 'author_id', 'publisher_id']
 
     def create(self, validated_data):
-        category = validated_data.pop('category', None)
-        publisher = validated_data.pop('publisher', None)
-        authors_data = validated_data.pop('authors', [])
+        category_id = validated_data.pop('category_id', None)
+        publisher_id = validated_data.pop('publisher_id', None)
+        author_id = validated_data.pop('author_id', None)
         image = validated_data.pop('image', None)
         request = self.context.get('request')
 
-        category_id = category.category_id
-        category_instance = Category.objects.filter(is_active__in=[True], category_id=category_id).first()
-        if category_instance:
-            validated_data['category'] = category_instance
-        else:
-            raise serializers.ValidationError('Category does not exist')
+        if category_id:
+            category_instance = Category.objects.filter(is_active__in=[True], category_id=category_id).first()
+            if category_instance:
+                validated_data['category'] = category_instance
+            else:
+                raise serializers.ValidationError('Category does not exits')
 
-        publisher_id = publisher.publisher_id
-        publisher_instance = Publisher.objects.filter(is_active__in=[True], publisher_id=publisher_id).first()
-        if publisher_instance:
-            validated_data['publisher'] = publisher_instance
-        else:
-            raise serializers.ValidationError('Publisher does not exist')
-
-        book = Book.objects.create(image=request.FILES.get('image'), **validated_data)
-        for author_data in authors_data:
-            author_id = author_data.author_id
+        if author_id:
             author_instance = Author.objects.filter(is_active__in=[True], author_id=author_id).first()
             if author_instance:
-                book.authors.add(author_instance)
+                validated_data['author'] = author_instance
             else:
-                raise serializers.ValidationError(f'Author with id {author_id} does not exist')
-        return book
+                raise serializers.ValidationError('Author does not exits')
+
+        if publisher_id:
+            publisher_instance = Publisher.objects.filter(is_active__in=[True], publisher_id=publisher_id).first()
+            if publisher_instance:
+                validated_data['publisher'] = publisher_instance
+            else:
+                raise serializers.ValidationError('Publisher is not exits')
+        return Book.objects.create(image=request.FILES.get('image'), **validated_data)
 
     def destroy(self, instance):
         instance.is_active = False
@@ -82,22 +83,26 @@ class BookSerializer(serializers.ModelSerializer):
 class BookInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category', 'authors', 'publisher']
+        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category', 'author', 'publisher']
 
 class UpdateBookSerializer(serializers.ModelSerializer):
     category_id = serializers.CharField(write_only=True)
     publisher_id = serializers.CharField(write_only=True)
+    author_id = serializers.CharField(write_only=True)
 
     class Meta:
         model = Book
-        fields = ['image', 'price', 'sale','quantity','des', 'category_id','publisher_id']
+        fields = ['title','image', 'price', 'sale','quantity','des','is_active', 'category_id','publisher_id','author_id']
 
     def update(self, instance, validated_data):
         request = self.context.get('request')
+        instance.title = validated_data.get('title')
         instance.image = request.FILES.get('image')
         instance.price = validated_data.get('price')
         instance.sale = validated_data.get('sale')
         instance.quantity = validated_data.get('quantity')
+        instance.is_active = validated_data.get('is_active')
+        instance.des = validated_data.get('des')
 
         category_id = validated_data.pop('category_id')
         category_instance = Category.objects.filter(is_active__in = [True], category_id=category_id).first()
@@ -105,15 +110,17 @@ class UpdateBookSerializer(serializers.ModelSerializer):
             instance.category = category_instance
         else:
             raise serializers.ValidationError('Category does not exists')
-
         publisher_id = validated_data.pop('publisher_id')
         publisher_instance = Publisher.objects.filter(is_active__in = [True], publisher_id=publisher_id).first()
         if publisher_instance:
             instance.publisher = publisher_instance
         else:
             raise serializers.ValidationError('Publisher does not exists')
-
-        instance.des = validated_data.get('des')
-
+        author_id = validated_data.pop('author_id')
+        author_instance = Author.objects.filter(is_active__in=[True], author_id=author_id).first()
+        if author_instance:
+            instance.author= author_instance
+        else:
+            raise serializers.ValidationError('Author does not exists')
         instance.save()
         return instance

@@ -179,7 +179,7 @@ class UpdateBookView(APIView):
             serializer = UpdateBookSerializer(book)
             serializer.destroy(book)
 
-            return Response({'message': 'Book sofr deleted'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'Book no content'}, status=status.HTTP_204_NO_CONTENT)
 
         return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 

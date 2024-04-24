@@ -1,6 +1,5 @@
 from django.shortcuts import render
-
-# Create your views here.
+from django.db.models import Q
 from rest_framework.response import Response
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -127,16 +126,15 @@ class AddBookView(APIView):
     def post(self, request):
         token_verification_url = "http://127.0.0.1:4000/api/ecomSys/user/verify-token/"
         headers = {'Authorization': request.headers.get('Authorization')}
-        print(headers)
         response = requests.get(token_verification_url, headers=headers)
-        print(response)
+
         if response.status_code == 200:
             serializer = BookSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status = status.HTTP_201_CREATED)
-            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-        return Response({'error': 'Invalid token.'}, status = status.HTTP_401_UNAUTHORIZED)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Hien thi tat ca book
 class BookListView(APIView):
@@ -155,14 +153,14 @@ class BookListOfCategoryView(APIView):
 # Tim kiem book bang keywork
 class SearchBookListView(APIView):
     def get(self, request, key):
-        books = Book.objects.filter(Q(title__icontains=key)|Q(author__icontains=key), is_active__in=[True])
+        books = Book.objects.filter(Q(title__icontains=key)|Q(author__name__icontains=key), is_active__in=[True])
         serializer = BookInfoSerializer(books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Xem thong tin detail book
 class BookDetailView(APIView):
     def get(self,request, book_id):
-        book = Book.objects.filter(id=book_id, is_active__in=[True]).first()
+        book = Book.objects.filter(book_id=book_id, is_active__in=[True]).first()
         serializer = BookInfoSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -178,12 +176,11 @@ class UpdateBookView(APIView):
                 book = Book.objects.get(book_id=book_id)
             except:
                 return Response({'error': 'Book not found'}, status=status.HTTP_404_NOT_FOUND)
-
-            serializer = UpdateBookSerializer(book)
-            serializer.destroy(book)
-
-            return Response({'message': 'Book sofr deleted'}, status=status.HTTP_204_NO_CONTENT)
-
+            serializer = UpdateBookSerializer(book, data=request.data, context={'request': request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({'error': 'Invalid token'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Xoa book  ( cần gọi server de xac thuc)
@@ -202,5 +199,5 @@ class DeleteBookView(APIView):
             serializer = BookSerializer()
             serializer.destroy(book)
 
-            return Response({'message': 'Book soft deleted'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'Book is active false'}, status=status.HTTP_204_NO_CONTENT)
         return Response({'error': 'Invalid token.'}, status=status.HTTP_401_UNAUTHORIZED)

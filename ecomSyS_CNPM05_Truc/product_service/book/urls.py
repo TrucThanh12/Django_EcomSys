@@ -14,7 +14,7 @@ urlpatterns = [
     path('publisher/add/', CreatePublisherView.as_view()),
     path('publisher/delete/<str:publisher_id>/',DeletePublisherView.as_view()),
     path('add/', AddBookView.as_view()),
-    path('/',BookListView.as_view()),
+    path('list/',BookListView.as_view()),
     path('detail/<str:book_id>/',BookDetailView.as_view()),
     path('list/category/<str:category_id>/', BookListOfCategoryView.as_view()),
     path('search/<str:key>/',SearchBookListView.as_view()),
