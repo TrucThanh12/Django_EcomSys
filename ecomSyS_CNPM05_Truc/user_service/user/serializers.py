@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name', 'phone_number', 'is_active']
+        fields = ['id','username', 'email', 'password', 'first_name', 'last_name', 'phone_number', 'is_active']
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data.get('password'))
@@ -42,7 +42,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'phone_number', 'email']
+        fields = ['id','first_name', 'last_name', 'phone_number', 'email']
 
 
 # Xác định các nhận vào và trả về dữ liệu User khi đổi mật khẩu
