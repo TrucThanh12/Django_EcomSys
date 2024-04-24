@@ -1,8 +1,6 @@
-from django.conf import settings
-from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path
 from .views import SearchView,ShowSearchView,DeleteSearchView
-from ecomSyS_CNPM05_Truc.book_service.book import admin
+from demo.book_service.book import admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),

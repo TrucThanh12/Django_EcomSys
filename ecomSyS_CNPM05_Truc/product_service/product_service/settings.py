@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-%zx^)7p6o3d-j8bh%+ouh7-izmiw3m!&-*s#x6%ocv4ll(2oho
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+PORT = 4002
 
 
 # Application definition
@@ -37,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'book',
+    'clothes',
+    'mobile'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,10 @@ WSGI_APPLICATION = 'product_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'db_products',
+        'HOST': 'localhost',
+        'POST': 27017,
     }
 }
 
@@ -118,6 +126,14 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CORS_ALLOW_CREDENTIALS = True #cho phép trình duyệt web yêu cầu tài nguyên từ 1 domain khác vơ ngồn mà trang web đang chay
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
