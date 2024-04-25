@@ -81,9 +81,15 @@ class BookSerializer(serializers.ModelSerializer):
 
 # Xem thong tin book
 class BookInfoSerializer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
-        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category', 'author', 'publisher']
+        fields = ['book_id', 'title', 'image', 'price', 'sale', 'quantity', 'des', 'category', 'author', 'publisher', 'type']
+
+    def get_type(self, obj):
+        return "book"
+
 
 class UpdateBookSerializer(serializers.ModelSerializer):
     category_id = serializers.CharField(write_only=True)

@@ -40,10 +40,14 @@ class MobileSerializer(serializers.ModelSerializer):
         return instance
 
 class MobileInfoSerializer(serializers.ModelSerializer):
+    type = serializers.SerializerMethodField()
     class Meta:
         model = Mobile
         fields = ['mobile_id', 'title', 'image', 'price', 'sale', 'quantity', 'color', 'size', 'memory', 'ram', 'cpu',
-                  'pin', 'des', 'brand_id']
+                  'pin', 'des', 'brand_id','type']
+
+    def get_type(self,obj):
+        return "mobile"
 
 class UpdateMobileSerializer(serializers.ModelSerializer):
     brand_id = serializers.CharField(write_only=True)
