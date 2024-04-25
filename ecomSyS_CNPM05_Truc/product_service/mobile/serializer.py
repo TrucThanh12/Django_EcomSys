@@ -5,7 +5,7 @@ from .models import Brand, Mobile
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
-        fields = ['category_id', 'name', 'des']
+        fields = ['brand_id', 'name', 'des']
 
     def destroy(self, instance):
         instance.is_active = False
@@ -29,7 +29,7 @@ class MobileSerializer(serializers.ModelSerializer):
         if brand_id:
             brand_instance = Brand.objects.filter(is_active__in=[True],brand_id=brand_id).first()
             if brand_instance:
-                validated_data['brand'] = brand_instance
+                validated_data['brand_id'] = brand_instance
             else:
                 raise serializers.ValidationError('Brand does not exist')
         return Mobile.objects.create(image=request.FILES.get('image'),**validated_data)
@@ -46,7 +46,7 @@ class MobileInfoSerializer(serializers.ModelSerializer):
                   'pin', 'des', 'brand_id']
 
 class UpdateMobileSerializer(serializers.ModelSerializer):
-    category_id = serializers.CharField(write_only=True)
+    brand_id = serializers.CharField(write_only=True)
 
     class Meta:
         model = Mobile

@@ -1,23 +1,20 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+from .views import CreateBrandView, CreateMobileView, BrandListView, MobileListOfBrandView, MobileListView, \
+    DeleteBrandView, UpdateMobileView, DeleteMobileView, MobileDetailView, SearchMobileListView
 
 urlpatterns = [
-    # path('category/add/', CreateCategoryView.as_view()),
-    # path('category/all/',CategoryListView.as_view()),
-    # path('category/delete/<str:category_id>/',DeleteCategoryView.as_view()),
-    # path('author/add/', CreateAuthorView.as_view()),
-    # path('author/delete/<str:author_id>/',DeleteAuthorView.as_view()),
-    # path('publisher/add/', CreatePublisherView.as_view()),
-    # path('publisher/delete/<str:publisher_id>/',DeletePublisherView.as_view()),
-    # path('add/', AddBookView.as_view()),
-    # path('list/',BookListView.as_view()),
-    # path('detail/<str:book_id>/',BookDetailView.as_view()),
-    # path('list/category/<str:category_id>/', BookListOfCategoryView.as_view()),
-    # path('search/<str:key>/',SearchBookListView.as_view()),
-    # path('edit/<str:book_id>',UpdateBookView.as_view()),
-    # path('delete/<str:book_id>/',DeleteBookView.as_view())
-
+    path('brand/add/',CreateBrandView.as_view()),
+    path('brand/all/',BrandListView.as_view()),
+    path('brand/delete/<str:brand_id>/',DeleteBrandView.as_view()),
+    path('add/',CreateMobileView.as_view()),
+    path('list/brand/<str:brand_id>/',MobileListOfBrandView.as_view()),
+    path('list/',MobileListView.as_view()),
+    path('detail/<str:mobile_id>/',MobileDetailView.as_view()),
+    path('update/<str:mobile_id>/',UpdateMobileView.as_view()),
+    path('delete/<str:mobile_id>/',DeleteMobileView.as_view()),
+    path('search/<str:key>/',SearchMobileListView.as_view())
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
