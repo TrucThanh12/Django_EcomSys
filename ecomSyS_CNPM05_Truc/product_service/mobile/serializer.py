@@ -54,7 +54,12 @@ class UpdateMobileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Mobile
-        fields = ['image', 'price', 'sale','quantity', 'des', 'brand_id']
+        fields = ['image',
+                  'price',
+                  'sale',
+                  'quantity',
+                  'des',
+                  'brand_id']
 
     def update(self,instance,validated_data):
         request = self.context.get('request')
