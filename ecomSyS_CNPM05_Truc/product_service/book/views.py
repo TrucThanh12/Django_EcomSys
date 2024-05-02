@@ -160,7 +160,7 @@ class SearchBookListView(APIView):
 # Xem thong tin detail book
 class BookDetailView(APIView):
     def get(self,request, book_id):
-        book = Book.objects.filter(book_id=book_id, is_active__in=[True]).first()
+        book = Book.objects.filter(id=book_id, is_active__in=[True]).first()
         serializer = BookInfoSerializer(book)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

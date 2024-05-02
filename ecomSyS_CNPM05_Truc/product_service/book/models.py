@@ -1,7 +1,6 @@
 from django.db import models
 
 class Category(models.Model):
-    category_id = models.CharField(max_length=7,primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     des = models.TextField(null=True)
@@ -10,7 +9,6 @@ class Category(models.Model):
         return self.name
 
 class Author(models.Model):
-    author_id = models.CharField(max_length=7,primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     des = models.TextField(null=True)
@@ -19,7 +17,6 @@ class Author(models.Model):
         return self.name
 
 class Publisher(models.Model):
-    publisher_id = models.CharField(max_length=7,primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     address = models.CharField(max_length=100)
@@ -31,7 +28,6 @@ class Publisher(models.Model):
         return self.name
 
 class Book(models.Model):
-    book_id = models.CharField(max_length=7,primary_key=True)
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='images/books',null=True)
     price = models.FloatField()
