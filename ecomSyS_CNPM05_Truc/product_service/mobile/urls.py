@@ -7,9 +7,9 @@ from .views import CreateBrandView, CreateMobileView, BrandListView, MobileListO
 urlpatterns = [
     path('brand/add/',CreateBrandView.as_view()),
     path('brand/all/',BrandListView.as_view()),
-    path('brand/delete/<str:brand_id>/',DeleteBrandView.as_view()),
+    path('brand/delete/<str:brand>/',DeleteBrandView.as_view()),
     path('add/',CreateMobileView.as_view()),
-    path('list/brand/<str:brand_id>/',MobileListOfBrandView.as_view()),
+    path('list/brand/<str:brand>/',MobileListOfBrandView.as_view()),
     path('list/',MobileListView.as_view()),
     path('detail/<str:mobile_id>/',MobileDetailView.as_view()),
     path('update/<str:mobile_id>/',UpdateMobileView.as_view()),

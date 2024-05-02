@@ -31,13 +31,13 @@ class BrandListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class DeleteBrandView(APIView):
-    def delete(self, request, brand_id):
+    def delete(self, request, brand):
         token_verification_url = "http://127.0.0.1:4000/api/ecomSys/user/verify-token/"
         headers = {'Authorization': request.headers.get('Authorization')}
         response = requests.get(token_verification_url, headers=headers)
         if response.status_code == 200:
             try:
-                brand = Brand.objects.get(brand_id=brand_id)
+                brand = Brand.objects.get(id=brand)
             except Brand.DoesNotExist:
                 return Response({'error': 'Brand not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -67,8 +67,8 @@ class MobileListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class MobileListOfBrandView(APIView):
-    def get(self,request,brand_id):
-        mobiles = Mobile.objects.filter(brand_id=brand_id,is_active__in=[True])
+    def get(self,request,brand):
+        mobiles = Mobile.objects.filter(id=brand,is_active__in=[True])
         serializer = MobileInfoSerializer(mobiles,many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -80,7 +80,7 @@ class SearchMobileListView(APIView):
 
 class MobileDetailView(APIView):
     def get(self,request,mobile_id):
-        mobiles = Mobile.objects.filter(mobile_id=mobile_id,is_active__in=[True]).first()
+        mobiles = Mobile.objects.filter(id=mobile_id,is_active__in=[True]).first()
         serializer = MobileInfoSerializer(mobiles)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -91,7 +91,7 @@ class UpdateMobileView(APIView):
         response = requests.get(token_verification_url, headers=headers)
         if response.status_code == 200:
             try:
-                mobile = Mobile.objects.get(mobile_id=mobile_id)
+                mobile = Mobile.objects.get(id=mobile_id)
             except Mobile.DoesNotExist:
                 return Response({'error': 'Mobile not found'}, status=status.HTTP_404_NOT_FOUND)
             serializer = UpdateMobileSerializer(mobile,data=request.data, context={'request': request})
@@ -108,7 +108,7 @@ class DeleteMobileView(APIView):
         response = requests.get(token_verification_url, headers=headers)
         if response.status_code == 200:
             try:
-                mobile = Mobile.objects.get(mobile_id=mobile_id)
+                mobile = Mobile.objects.get(id=mobile_id)
             except Mobile.DoesNotExist:
                 return Response({'error': 'Mobile not found'}, status=status.HTTP_404_NOT_FOUND)
 

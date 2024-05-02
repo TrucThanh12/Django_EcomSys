@@ -83,7 +83,8 @@ WSGI_APPLICATION = 'product_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'db_products',
+        # 'NAME': 'db_products',
+        'NAME': 'product_service',
         'HOST': 'localhost',
         'POST': 27017,
     }

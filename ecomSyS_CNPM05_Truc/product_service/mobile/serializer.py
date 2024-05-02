@@ -5,7 +5,7 @@ from .models import Brand, Mobile
 class BrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brand
-        fields = ['brand_id', 'name', 'des']
+        fields = ['name', 'des']
 
     def destroy(self, instance):
         instance.is_active = False
@@ -14,22 +14,22 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class MobileSerializer(serializers.ModelSerializer):
-    brand_id = serializers.CharField(write_only=True)
+    brand = serializers.CharField(write_only=True)
 
     class Meta:
         model = Mobile
-        fields = ['mobile_id', 'title', 'image', 'price', 'sale', 'quantity', 'color', 'size', 'memory', 'ram', 'cpu',
-                  'pin','des','brand_id']
+        fields = ['title', 'image', 'price', 'sale', 'quantity', 'color', 'size', 'memory', 'ram', 'cpu',
+                  'pin','des','brand']
 
     def create(self, validated_data):
-        brand_id = validated_data.pop('brand_id',None)
+        brand = validated_data.pop('brand',None)
         image = validated_data.pop('image', None)
         request = self.context.get('request')
 
-        if brand_id:
-            brand_instance = Brand.objects.filter(is_active__in=[True],brand_id=brand_id).first()
+        if brand:
+            brand_instance = Brand.objects.filter(is_active__in=[True],id=brand).first()
             if brand_instance:
-                validated_data['brand_id'] = brand_instance
+                validated_data['brand'] = brand_instance
             else:
                 raise serializers.ValidationError('Brand does not exist')
         return Mobile.objects.create(image=request.FILES.get('image'),**validated_data)
@@ -43,14 +43,14 @@ class MobileInfoSerializer(serializers.ModelSerializer):
     type = serializers.SerializerMethodField()
     class Meta:
         model = Mobile
-        fields = ['mobile_id', 'title', 'image', 'price', 'sale', 'quantity', 'color', 'size', 'memory', 'ram', 'cpu',
-                  'pin', 'des', 'brand_id','type']
+        fields = ['id', 'title', 'image', 'price', 'sale', 'quantity', 'color', 'size', 'memory', 'ram', 'cpu',
+                  'pin', 'des', 'brand','type']
 
     def get_type(self,obj):
         return "mobile"
 
 class UpdateMobileSerializer(serializers.ModelSerializer):
-    brand_id = serializers.CharField(write_only=True)
+    brand = serializers.CharField(write_only=True)
 
     class Meta:
         model = Mobile
@@ -59,7 +59,7 @@ class UpdateMobileSerializer(serializers.ModelSerializer):
                   'sale',
                   'quantity',
                   'des',
-                  'brand_id']
+                  'brand']
 
     def update(self,instance,validated_data):
         request = self.context.get('request')
@@ -67,9 +67,9 @@ class UpdateMobileSerializer(serializers.ModelSerializer):
         instance.price = validated_data.get('price')
         instance.sale = validated_data.get('sale')
         instance.quantity = validated_data.get('quantity')
-        brand_id = validated_data.get('brand_id')
+        brand = validated_data.get('brand')
         instance.des = validated_data.get('des')
-        brand_instance = Brand.objects.filter(is_active__in=[True], brand_id=brand_id).first()
+        brand_instance = Brand.objects.filter(is_active__in=[True], id=brand).first()
         if brand_instance:
             instance.brand = brand_instance
         else:

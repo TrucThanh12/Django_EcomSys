@@ -1,7 +1,7 @@
 from django.db import models
 
 class Brand(models.Model):
-    brand_id = models.CharField(max_length=7, primary_key=True)
+    #brand_id = models.CharField(max_length=7, primary_key=True)
     name = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     des = models.TextField(null=True)
@@ -10,7 +10,7 @@ class Brand(models.Model):
         return self.name
 
 class Mobile(models.Model):
-    mobile_id = models.CharField(max_length=7, primary_key=True)
+    #mobile_id = models.CharField(max_length=7, primary_key=True)
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='image/mobiles/',null=True)
     price = models.FloatField()
@@ -24,7 +24,7 @@ class Mobile(models.Model):
     pin = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
     des = models.TextField(null=True)
-    brand_id = models.ForeignKey(Brand,on_delete=models.CASCADE,default=None)
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,default=None)
 
     def __str__(self):
         return self.title
